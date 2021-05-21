@@ -7,11 +7,11 @@ import TicTacToe.Player.Piece;
 
 public class AllPositions{
 
-    private ArrayList<Field> allPositions;
+    private HashMap<Integer,HashSet<Field>> allPositions;
 
     //コンストラクタ
     public AllPositions(){
-        allPositions = new ArrayList<>();
+        allPositions = new HashMap<>();
     }
 
     //メソッド
@@ -23,24 +23,41 @@ public class AllPositions{
         ・○と×の個数に応じて場合分けを行い全局面を算出する。
         */
 
+        ArrayList<HashSet<Field>> list = new ArrayList<>();
+        for(int i=0;i<9;i++){
+            list.add(new HashSet<>());
+        }
+
         //○が１個の場合(9通り)
-        for(int i=0;i<3;i++){
-            for(int j=0;j<3;j++){
-                Field field = new Field();
-                field.setMaru(i, j);
-                allPositions.add(field);
+        for(int i=0;i<9;i++){
+            Field field = new Field();
+            field.setMaru(i);
+            list.get(0).add(field);
+            allPositions.put(1, list.get(0));
+        }
+
+        for(int k=0;k<8;k++){
+            for(Field order:allPositions.get(k+1)){
+                Field preField = new Field(order.getField());
+                for(int j=0;j<9;j++){
+                    if(preField.search(j) == Piece.None){
+                        Field sucField = preField.clone();
+                        if(k%2 == 1){
+                            sucField.setMaru(j);
+                        }else{
+                            sucField.setBatsu(j);
+                        }
+                        list.get(k+1).add(sucField);
+                        allPositions.put(k+2,list.get(k+1));
+                    }
+                }
             }
         }
 
-        //○が１個、×が１個の場合(上記9通りそれぞれについて8通り)
-        for(int i=0;i<allPositions.size();i++){
-            Field preField = new Field(allPositions.get(i).getField());
-            allPositions.add(preField);
-        }
     }
 
     //getter
-    public ArrayList<Field> getAllPositions(){
+    public HashMap<Integer,HashSet<Field>> getAllPositions(){
         return this.allPositions;
     }
 

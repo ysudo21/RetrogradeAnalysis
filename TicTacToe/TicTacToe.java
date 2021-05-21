@@ -1,16 +1,24 @@
 package TicTacToe;
 
+import java.util.HashSet;
+
 import TicTacToe.Field.Field;
+import TicTacToe.Player.Piece;
 import TicTacToe.Positions.AllPositions;
 
 public class TicTacToe {
     public static void main(String args[]){
 
+        int count = 0;
+
         AllPositions positions = new AllPositions();
         positions.listUpAllPositions();
-        for(Field test:positions.getAllPositions()){
-            System.out.println(test);
+        for(Integer key:positions.getAllPositions().keySet()){
+            for(Field test:positions.getAllPositions().get(key)){
+                System.out.println(test);
+                count++;
+            }
         }
-
+        System.out.println(count);
     }
 }

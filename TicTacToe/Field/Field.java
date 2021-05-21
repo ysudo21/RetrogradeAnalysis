@@ -4,58 +4,57 @@ import java.util.Arrays;
 
 import TicTacToe.Player.Piece;
 
-public class Field {
+public class Field implements Cloneable{
     
-    private Piece[][] field = new Piece[3][3];
+    private Piece[] field = new Piece[9];
 
     //コンストラクタ
     public Field(){
-        for(Piece[] value:this.field){
-            Arrays.fill(value,Piece.None);
-        }
+        Arrays.fill(this.field,Piece.None);
     }
 
-    public Field(Piece[][] field){
+    public Field(Piece[] field){
         this.field = field;
     }
 
     //メソッド
     public void resetField(){
-        for(Piece[] value:this.field){
-            Arrays.fill(value,Piece.None);
-        }
+        Arrays.fill(this.field,Piece.None);
     }
 
-    public Piece[][] setMaru(int x,int y){
-        this.field[x][y] = Piece.Maru;
+    public Piece[] setMaru(int x){
+        this.field[x] = Piece.Maru;
         return this.field;
     }
 
-    public Piece[][] setBatsu(int x,int y){
-        this.field[x][y] = Piece.Batsu;
+    public Piece[] setBatsu(int x){
+        this.field[x]= Piece.Batsu;
         return this.field;
     }
 
-    public Piece search(int x, int y){
-        return this.field[x][y];
+    public Piece search(int x){
+        return this.field[x];
     }
 
     //getter
-    public Piece[][] getField(){
+    public Piece[] getField(){
         return this.field;
     }
 
     //setter
-    public void setField(Piece[][] piece){
+    public void setField(Piece[] piece){
         this.field = piece;
     }
 
     //toString()
     public String toString(){
         String picture = new String();
-        for(Piece[] array1:field){
-            picture += "\n";
-            for(Piece value:array1){
+        for(int i=0;i<3;i++){
+            Piece[] separated = new Piece[3];
+            for(int j=0;j<3;j++){
+                separated[j] = this.field[3*i+j];
+            }
+            for(Piece value:separated){
                 switch(value){
                     case None:
                     picture += "-";
@@ -70,8 +69,39 @@ public class Field {
                     break;
                 }
             }
+        picture += "\n";
         }
         return picture;
     }
 
+    //clone()
+    @Override
+    public Field clone(){
+        Field newField = null;
+        try{
+            newField = (Field)super.clone();
+            newField.field=this.field.clone();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return newField;
+    }
+
+    //equals()
+    public boolean equals(Object opponent){
+        Field opField = (Field)opponent;
+        return (Arrays.equals(this.field, opField.getField()));
+    }
+
+    //hashCode()
+    public int hashCode(){
+        int result = 17;
+
+        for(int i=0;i<9;i++){
+            result *= 31;
+            result += this.field[i].hashCode();
+        }
+
+        return result;
+    }
 }
