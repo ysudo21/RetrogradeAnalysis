@@ -1,9 +1,6 @@
 package TicTacToe;
 
-import java.util.HashSet;
-
 import TicTacToe.Field.Field;
-import TicTacToe.Player.Piece;
 import TicTacToe.Positions.AllPositions;
 
 public class TicTacToe {
