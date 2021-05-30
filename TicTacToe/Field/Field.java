@@ -18,10 +18,6 @@ public class Field implements Cloneable{
     }
 
     //メソッド
-    public void resetField(){
-        Arrays.fill(this.field,Piece.None);
-    }
-
     public Piece[] setMaru(int x){
         this.field[x] = Piece.Maru;
         return this.field;
@@ -35,6 +31,65 @@ public class Field implements Cloneable{
     public Piece search(int x){
         return this.field[x];
     }
+
+    public boolean isMaruWon(){
+        for(int i=0;i<3;i++){
+            if(this.search(3*i) == this.search(3*i + 1) && this.search(3*i + 1) == this.search(3*i + 2) && this.search(3*i + 2) == Piece.Maru){
+                return true;
+            }else if(this.search(i) == this.search(i + 3) && this.search(i + 3) == this.search(i + 6) && this.search(i + 6) == Piece.Maru){
+                return true;
+            }
+        }
+        if(this.search(0) == this.search(4) && this.search(4) == this.search(8) && this.search(8) == Piece.Maru){
+                return true;
+        }
+        if(this.search(2) == this.search(4) && this.search(4) == this.search(6) && this.search(6) == Piece.Maru){
+            return true;
+        }
+        return false;
+    }
+
+    public boolean isBatsuWon(){
+        for(int i=0;i<3;i++){
+            if(this.search(3*i) == this.search(3*i + 1) && this.search(3*i + 1) == this.search(3*i + 2) && this.search(3*i + 2) == Piece.Batsu){
+                return true;
+            }else if(this.search(i) == this.search(i + 3) && this.search(i + 3) == this.search(i + 6) && this.search(i + 6) == Piece.Batsu){
+                return true;
+            }
+        }
+        if(this.search(0) == this.search(4) && this.search(4) == this.search(8) && this.search(8) == Piece.Batsu){
+                return true;
+        }
+        if(this.search(2) == this.search(4) && this.search(4) == this.search(6) && this.search(6) == Piece.Batsu){
+            return true;
+        }
+        return false;
+    }
+
+    public int countMaru(){
+        int count = 0;
+        for(int i=0;i<9;i++){
+            if(this.field[i] == Piece.Maru){
+                count++;
+            }
+        }
+        return count;
+    }
+
+    public int countBatsu(){
+        int count = 0;
+        for(int i=0;i<9;i++){
+            if(this.field[i] == Piece.Batsu){
+                count++;
+            }
+        }
+        return count;
+    }
+
+    public boolean isMaruTurn(){
+        return (this.countMaru() == this.countBatsu());
+    }
+
 
     //getter
     public Piece[] getField(){
