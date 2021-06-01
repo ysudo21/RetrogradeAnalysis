@@ -1,8 +1,9 @@
-package TicTacToe.Positions;
+package TicTacToe.Positions.BatsuLosed;
 
 import java.util.HashSet;
 
 import TicTacToe.Field.Field;
+import TicTacToe.Positions.AllPositions;
 
 public class BatsuLosedPositions {
     

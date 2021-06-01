@@ -25,7 +25,9 @@ public class BatsuPreviousPositions {
                 if(piece[i] == Piece.Batsu){
                     piece[i] = Piece.None;
                     Field field = new Field(piece);
-                    preField.add(field);
+                    if(!(field.isBatsuWon()) && !(field.isMaruTurn())){
+                        preField.add(field);
+                    }
                 }
             }
         }
