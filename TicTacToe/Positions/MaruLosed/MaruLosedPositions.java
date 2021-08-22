@@ -1,9 +1,9 @@
-package TicTacToe.Positions.MaruLosed;
+package Positions.MaruLosed;
 
 import java.util.HashSet;
 
-import TicTacToe.Field.Field;
-import TicTacToe.Positions.AllPositions;
+import Field.Field;
+import Positions.AllPositions;
 
 public class MaruLosedPositions {
     

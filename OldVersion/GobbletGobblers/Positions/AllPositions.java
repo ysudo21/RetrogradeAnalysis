@@ -1,12 +1,14 @@
-package Positions;
+package GobbletGobblers.Positions;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 
-import Field.Field;
-import Player.Piece;
+import GobbletGobblers.Field.Field;
+import GobbletGobblers.Player.Piece;
 
-public class AllPositions{
-
+public class AllPositions {
+    
     private HashMap<Integer,HashSet<Field>> allPositions;
 
     //コンストラクタ
@@ -17,50 +19,49 @@ public class AllPositions{
     //メソッド
     public void listUpAllPositions(){
 
-        /*
-        ・○をMaru,×をBatsuに置き換えて考える。
-        ・先攻を○と固定すれば、交互に手番を行うため9つの場所うち最大でも５個が○、４個が×となる。
-        ・○と×の個数に応じて場合分けを行い全局面を算出する。
-        */
-
         ArrayList<HashSet<Field>> list = new ArrayList<>();
-        for(int i=0;i<9;i++){
+        for(int i=0;i<12;i++){
             list.add(new HashSet<>());
         }
 
-        //○が１個の場合(9通り)
-        for(int i=0;i<9;i++){
+        //白が１個の場合
+        for(int i=0;i<27;i++){
             Field field = new Field();
-            field.setMaru(i);
-            list.get(0).add(field);
-            allPositions.put(1, list.get(0));
+            if(field.setWhite(i) != null){
+                field.setWhite(i);
+                list.get(0).add(field);
+                allPositions.put(1, list.get(0));
+            }
+            field = null;
         }
 
-        for(int k=0;k<8;k++){
+        for(int k=0;k<3;k++){
             for(Field order:allPositions.get(k+1)){
                 Field preField = new Field(order.getField());
-                for(int j=0;j<9;j++){
+                for(int j=0;j<27;j++){
                     if(preField.search(j) == Piece.None){
                         Field sucField = preField.clone();
                         if(k%2 == 1){
-                            sucField.setMaru(j);
+                            if(sucField.setWhite(j) != null){
+                                sucField.setWhite(j);
+                            };
                         }else{
-                            sucField.setBatsu(j);
+                            if(sucField.setBlack(j) != null){
+                                sucField.setBlack(j);
+                            }
                         }
                         list.get(k+1).add(sucField);
                         allPositions.put(k+2,list.get(k+1));
+                        sucField = null;
                     }
                 }
             }
+            System.gc();
         }
-
     }
 
     //getter
     public HashMap<Integer,HashSet<Field>> getAllPositions(){
         return this.allPositions;
     }
-
-
 }
-

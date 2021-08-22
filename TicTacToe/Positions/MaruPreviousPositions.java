@@ -1,9 +1,9 @@
-package TicTacToe.Positions;
+package Positions;
 
 import java.util.HashSet;
 
-import TicTacToe.Field.Field;
-import TicTacToe.Player.Piece;
+import Field.Field;
+import Player.Piece;
 
 public class MaruPreviousPositions {
     

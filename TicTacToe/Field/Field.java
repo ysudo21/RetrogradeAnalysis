@@ -1,8 +1,8 @@
-package TicTacToe.Field;
+
 
 import java.util.Arrays;
 
-import TicTacToe.Player.Piece;
+import Player.Piece;
 
 public class Field implements Cloneable{
     

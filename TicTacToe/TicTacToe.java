@@ -1,12 +1,12 @@
-package TicTacToe;
 
-import TicTacToe.Field.Field;
-import TicTacToe.Positions.BatsuPreviousPositions;
-import TicTacToe.Positions.MaruPreviousPositions;
-import TicTacToe.Positions.BatsuLosed.BatsuInspection;
-import TicTacToe.Positions.BatsuLosed.BatsuLosedPositions;
-import TicTacToe.Positions.MaruLosed.MaruInspection;
-import TicTacToe.Positions.MaruLosed.MaruLosedPositions;
+
+import Field.Field;
+import Positions.BatsuPreviousPositions;
+import Positions.MaruPreviousPositions;
+import Positions.BatsuLosed.BatsuInspection;
+import Positions.BatsuLosed.BatsuLosedPositions;
+import Positions.MaruLosed.MaruInspection;
+import Positions.MaruLosed.MaruLosedPositions;
 
 public class TicTacToe {
     public static void main(String args[]){

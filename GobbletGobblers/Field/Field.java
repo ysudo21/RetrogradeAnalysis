@@ -1,52 +1,60 @@
-package GobbletGobblers.Field;
+package Field;
 
 import java.util.Arrays;
 
-import GobbletGobblers.Player.*;
+public class Field{
 
-public class Field implements Cloneable{
-    
-    private Piece[] field;
-
-    //コンストラクタ
-    public Field(){
-        field = new Piece[27];
-        Arrays.fill(this.field,Piece.None);
+    //コンストラクタ(Singleton)
+    private Field(){
     }
 
-    public Field(Piece[] field){
-        this.field = field;
+    public static Field getInstance(){
+        return FieldInstanceHolder.INSTANCE;
+    }
+
+    public static class FieldInstanceHolder{
+        private static final Field INSTANCE = new Field();
     }
 
     //メソッド
-    public Piece[] setWhite(int x){
-        this.field[x] = Piece.White;
-        if(this.isAble(x)){
-            return this.field;
+
+    public int[] create(){
+        int[] field = new int[27];
+        Arrays.fill(field,0);
+        return field;
+    }
+
+    public int[] setWhite(int x,int[] field){
+        field[x] = 1;
+        if(this.isAble(x,field)){
+            return field;
         }
         return null;
     }
 
-    public Piece[] setBlack(int x){
-        this.field[x]= Piece.Black;
-        if(this.isAble(x)){
-            return this.field;
+    public int[] setBlack(int x,int[] field){
+        field[x]= 2;
+        if(this.isAble(x,field)){
+            return field;
         }
         return null;
     }
 
-    public boolean isAble(int x){
+    public boolean isAble(int x,int[] field){
         if(x>8){
-            if(this.field[x-9] != Piece.None){
+            if(field[x-9] != 0){
                 return false;
             }
             if(x>17){
+                if(field[x-18] != 0){
+                    return false;
+                }
                 int countWhite = 0;
                 int countBlack = 0;
                 for(int i=18;i<27;i++){
-                    if(this.field[i] == Piece.White){
+                    if(field[i] == 1){
                         countWhite++;
-                    }else if(this.field[i] == Piece.Black){
+                    }else if(field[i] == 2){
                         countBlack++;
                     }
                 }
@@ -57,9 +65,9 @@ public class Field implements Cloneable{
                 int countWhite = 0;
                 int countBlack = 0;
                 for(int i=9;i<18;i++){
-                    if(this.field[i] == Piece.White){
+                    if(field[i] == 1){
                         countWhite++;
-                    }else if(this.field[i] == Piece.Black){
+                    }else if(field[i] == 2){
                         countBlack++;
                     }
                 }
@@ -71,9 +79,9 @@ public class Field implements Cloneable{
             int countWhite = 0;
             int countBlack = 0;
             for(int i=0;i<9;i++){
-                if(this.field[i] == Piece.White){
+                if(field[i] == 1){
                     countWhite++;
-                }else if(this.field[i] == Piece.Black){
+                }else if(field[i] == 2){
                     countBlack++;
                 }
             }
@@ -84,93 +92,155 @@ public class Field implements Cloneable{
         return true;
     }
 
-    public Piece search(int x){
-        return this.field[x];
+    public boolean isAble(int[] field){
+        int countWhite = 0;
+        int countBlack = 0;
+        for(int i=0;i<9;i++){
+            if(field[i] == 1){
+                countWhite++;
+            }else if(field[i] == 2){
+                countBlack++;
+            }
+        }
+        if(countWhite>2 || countBlack>2){
+            return false;
+        }else{
+            countWhite = 0;
+            countBlack = 0;
+        }
+        for(int i=9;i<18;i++){
+            if(field[i] == 1){
+                countWhite++;
+            }else if(field[i] == 2){
+                countBlack++;
+            }
+        }
+        if(countWhite>2 || countBlack>2){
+            return false;
+        }else{
+            countWhite = 0;
+            countBlack = 0;
+        }
+        for(int i=18;i<27;i++){
+            if(field[i] == 1){
+                countWhite++;
+            }else if(field[i] == 2){
+                countBlack++;
+            }
+        }
+        if(countWhite>2 || countBlack>2){
+            return false;
+        }else{
+            countWhite = 0;
+            countBlack = 0;
+        }
+        return true;
     }
 
-    public Piece[] toTicTacToe(){
-        Piece[] piece = this.getField(); 
-        Piece[] tictactoe = new Piece[9];
+    public int search(int x,int[] field){
+        return field[x];
+    }
+
+    public int[] toTicTacToe(int[] field){ 
+        int[] tictactoe = new int[9];
         for(int i=0;i<9;i++){
-            if(piece[i] != Piece.None){
-                tictactoe[i] = piece[i];
-            }else if(piece[i+9] != Piece.None){
-                tictactoe[i] = piece[i+9];
-            }else if(piece[i+18] != Piece.None){
-                tictactoe[i] = piece[i+18];
+            if(field[i] != 0){
+                tictactoe[i] = field[i];
+            }else if(field[i+9] != 0){
+                tictactoe[i] = field[i+9];
+            }else if(field[i+18] != 0){
+                tictactoe[i] = field[i+18];
             }else{
-                tictactoe[i] = Piece.None;
+                tictactoe[i] = 0;
             }
         }
         return tictactoe;
     }
 
-    public boolean isWhiteWon(){
-        Field tField = new Field(this.toTicTacToe());
+    public boolean isWhiteWon(int[] field){
+        int[] tictactoe = this.toTicTacToe(field);
         for(int i=0;i<3;i++){
-            if(tField.search(3*i) == tField.search(3*i + 1) && tField.search(3*i + 1) == tField.search(3*i + 2) && tField.search(3*i + 2) == Piece.White){
+            if(search(3*i,tictactoe) == search(3*i + 1,tictactoe) && search(3*i + 1,tictactoe) == search(3*i + 2,tictactoe) && search(3*i + 2,tictactoe) == 1){
                 return true;
-            }else if(tField.search(i) == tField.search(i + 3) && tField.search(i + 3) == tField.search(i + 6) && tField.search(i + 6) == Piece.White){
+            }else if(search(i,tictactoe) == search(i + 3,tictactoe) && search(i + 3,tictactoe) == search(i + 6,tictactoe) && search(i + 6,tictactoe) == 1){
                 return true;
             }
         }
-        if(tField.search(0) == tField.search(4) && tField.search(4) == tField.search(8) && tField.search(8) == Piece.White){
+        if(search(0,tictactoe) == search(4,tictactoe) && search(4,tictactoe) == search(8,tictactoe) && search(8,tictactoe) == 1){
                 return true;
         }
-        if(tField.search(2) == tField.search(4) && tField.search(4) == tField.search(6) && tField.search(6) == Piece.White){
+        if(search(2,tictactoe) == search(4,tictactoe) && search(4,tictactoe) == search(6,tictactoe) && search(6,tictactoe) == 1){
             return true;
         }
         return false;
     }
 
-    public boolean isBlackWon(){
-        Field tField = new Field(this.toTicTacToe());
+    public boolean isBlackWon(int[] field){
+        int[] tictactoe = this.toTicTacToe(field);
         for(int i=0;i<3;i++){
-            if(tField.search(3*i) == tField.search(3*i + 1) && tField.search(3*i + 1) == tField.search(3*i + 2) && tField.search(3*i + 2) == Piece.Black){
+            if(search(3*i,tictactoe) == search(3*i + 1,tictactoe) && search(3*i + 1,tictactoe) == search(3*i + 2,tictactoe) && search(3*i + 2,tictactoe) == 2){
                 return true;
-            }else if(tField.search(i) == tField.search(i + 3) && tField.search(i + 3) == tField.search(i + 6) && tField.search(i + 6) == Piece.Black){
+            }else if(search(i,tictactoe) == search(i + 3,tictactoe) && search(i + 3,tictactoe) == search(i + 6,tictactoe) && search(i + 6,tictactoe) == 2){
                 return true;
             }
         }
-        if(tField.search(0) == tField.search(4) && tField.search(4) == tField.search(8) && tField.search(8) == Piece.Black){
+        if(search(0,tictactoe) == search(4,tictactoe) && search(4,tictactoe) == search(8,tictactoe) && search(8,tictactoe) == 2){
                 return true;
         }
-        if(tField.search(2) == tField.search(4) && tField.search(4) == tField.search(6) && tField.search(6) == Piece.Black){
+        if(search(2,tictactoe) == search(4,tictactoe) && search(4,tictactoe) == search(6,tictactoe) && search(6,tictactoe) == 2){
             return true;
         }
         return false;
     }
 
-    //getter
-    public Piece[] getField(){
-        return this.field;
+    public int[] radixConversionFromTen(long x){
+
+        String word = Long.toString(x,3);
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(word);
+        while(stringBuilder.length() != 27){
+            stringBuilder.insert(0,"0");
+        }
+        int[] intArray = new int[stringBuilder.length()];
+        
+        for (int i = 0; i < stringBuilder.length(); i++) {
+
+            String str = String.valueOf(stringBuilder.charAt(i));
+
+            intArray[i] = Integer.parseInt(str);
+        }
+
+        return intArray;
     }
 
-    //setter
-    public void setField(Piece[] piece){
-        this.field = piece;
+    public long radixConversionToTen(int[] x){
+        String from = "";
+        for(int a:x){
+            from += Long.toString(a);
+        }
+        return Long.parseLong(from,3);
     }
 
     //toString()
-    public String toString(){
+    public String toString(int[] field){
         String picture = new String();
         for(int k=0;k<3;k++){
             for(int i=0;i<3;i++){
-                Piece[] separated = new Piece[3];
+                int[] separated = new int[3];
                 for(int j=0;j<3;j++){
-                    separated[j] = this.field[9*k+3*i+j];
+                    separated[j] = field[9*k+3*i+j];
                 }
-                for(Piece value:separated){
+                for(int value:separated){
                     switch(value){
-                        case None:
+                        case 0:
                         picture += "-";
                         break;
 
-                        case White:
+                        case 1:
                         picture += "O";
                         break;
 
-                        case Black:
+                        case 2:
                         picture += "X";
                         break;
                     }
@@ -182,36 +252,6 @@ public class Field implements Cloneable{
         picture += "―――――――――";
         return picture;
     }
-
-    //clone()
-    @Override
-    public Field clone(){
-        Field newField = null;
-        try{
-            newField = (Field)super.clone();
-            newField.field=this.field.clone();
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        return newField;
-    }
-
-    //equals()
-    public boolean equals(Object opponent){
-        Field opField = (Field)opponent;
-        return (Arrays.equals(this.field, opField.getField()));
-    }
-
-    //hashCode()
-    public int hashCode(){
-        int result = 17;
-
-        for(int i=0;i<9;i++){
-            result *= 31;
-            result += this.field[i].hashCode();
-        }
-
-        return result;
-    }
 }
+
 

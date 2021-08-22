@@ -1,4 +1,4 @@
-package TicTacToe.Player;
+package Player;
 
 public enum Piece {
     Maru,
